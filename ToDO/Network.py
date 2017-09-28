@@ -17,7 +17,8 @@ import random
 import numpy as np
 from bokeh.core.compat.mplexporter._py3k_compat import xrange
 from pytools import delta
-from theano.typed_list.basic import length
+# from theano.typed_list.basic import length
+
 
 class Network(object):
     
@@ -68,11 +69,11 @@ class Network(object):
         n = training_data.num_examples
         
         for j in xrange(epochs):
-            random.shuffle(training_data)
-            mini_batchs = [ training_data[k:k+mini_batch_size]
-                             for k in xrange(0, mini_batch_size)]
-#             mini_batchs = training_data.next_batch(mini_batch_size)
-            
+#             random.shuffle(training_data)
+#             mini_batchs = [ training_data[k:k+mini_batch_size]
+#                              for k in xrange(0, mini_batch_size)]
+            x, y  = training_data.next_batch(mini_batch_size)
+            mini_batchs = zip(x, y)
             for mini_batch in mini_batchs:
                 self.update_mini_batch(mini_batch, eta)
                 
@@ -88,7 +89,7 @@ class Network(object):
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
         is the learning rate."""
-        
+        print("mini_batch {0} ".format(mini_batch))
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         

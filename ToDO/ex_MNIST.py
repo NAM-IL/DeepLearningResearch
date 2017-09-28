@@ -17,5 +17,5 @@ print("train_data:{0}".format(mnist.train.num_examples))
 print("test_data:{0}".format(mnist.test.num_examples))
 print("validation_data:{0}".format(mnist.validation.num_examples))
 
-# net = Network.Network([784, 30, 10])
-# net.SGD(mnist.train, 30, 10, 100.0, test_data=mnist.test)
+net = Network.Network([784, 30, 10])
+net.SGD(mnist.train, 30, 10, 100.0, test_data=mnist.test)

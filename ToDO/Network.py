@@ -15,7 +15,7 @@ import random
 
 # Third-party libraries
 import numpy as np
-from bokeh.core.compat.mplexporter._py3k_compat import xrange
+# from bokeh.core.compat.mplexporter._py3k_compat import xrange
 from pytools import delta
 # from theano.typed_list.basic import length
 
@@ -64,18 +64,20 @@ class Network(object):
         tracking progress, but slows things down substantially."""
         
         if test_data:
-            n_test = test_data.num_examples
+            n_test = len(test_data)
         
-        n = training_data.num_examples
+        n = len(training_data)
         
-        for j in xrange(epochs):
-#             random.shuffle(training_data)
-#             mini_batchs = [ training_data[k:k+mini_batch_size]
-#                              for k in xrange(0, mini_batch_size)]
-            x, y  = training_data.next_batch(mini_batch_size)
-            mini_batchs = zip(x, y)
+#         print("n_test {0} complete".format(n_test))
+#         print("n {0} complete".format(n))
+        
+        for j in range(epochs):
+            random.shuffle(training_data)
+            mini_batchs = [ training_data[k:k+mini_batch_size]
+                             for k in range(0, mini_batch_size)]
             for mini_batch in mini_batchs:
                 self.update_mini_batch(mini_batch, eta)
+                pass
                 
             if test_data:
                 print("Epoch {0}: {1} / {2}".format(
@@ -89,7 +91,7 @@ class Network(object):
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
         is the learning rate."""
-        print("mini_batch {0} ".format(mini_batch))
+#         print("mini_batch {0} ".format(mini_batch))
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         
@@ -137,12 +139,12 @@ class Network(object):
         # scheme in the book, used here to take advantage of the fact
         # that Python can use negative indices in lists.
         
-        for i in xrange(2, self.num_layers):
-            z = zs[-1]
+        for l in range(2, self.num_layers):
+            z = zs[-l]
             sp = sigmoid_prime(z)
-            delta = np.dot(np.transpose(self.weights[-i+1]), delta)*sp
-            nabla_b[-1] = delta
-            nabla_w[-1] = np.dot(delta, np.transpose(activations[-i-1]))
+            delta = np.dot(np.transpose(self.weights[-l+1]), delta)*sp
+            nabla_b[-l] = delta
+            nabla_w[-l] = np.dot(delta, np.transpose(activations[-l-1]))
     
         return (nabla_b, nabla_w)
         
